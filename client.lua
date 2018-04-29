@@ -50,6 +50,7 @@ function clientState.update( dt )
 
             -- ONCE
             if( data[1] == "id" ) then
+                -- got our id, and other player ids
                 local id = tonumber( data[2] )
                 
                 local i = 3
@@ -75,6 +76,7 @@ function clientState.update( dt )
 
             -- ONCE
             if( data[1] == "add" ) then
+                -- new player joined
                 local id = tonumber( data[2] )
                 if( not universe.players[id] ) then
                     universe.players[id] = create.player()
@@ -96,7 +98,7 @@ function clientState.update( dt )
             if( data[1] == "bul" )then
                 local id = tonumber( data[2] )
                 if( id ~= clientId ) then
-                    local bullet = create.bullet( data[3], data[4], data[5], id )
+                    local bullet = create.bullet( tonumber( data[3] ), tonumber( data[4] ), tonumber( data[5] ), id )
                     universe.bullets[bullet] = bullet
                 end
             end
@@ -121,10 +123,12 @@ function clientState.update( dt )
 
         elseif event.type == "disconnect" then
             print(event.peer, "disconnected.")
+            -- reset stuff if we get disconnected
             for i, player in pairs( universe.players ) do
                 player:clear()
             end
             universe.players = {}
+            -- and go back to start state
             state = require "start"
         end
         event = host:service()

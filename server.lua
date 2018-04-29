@@ -46,7 +46,7 @@ function serverState.update( dt )
             -- ONCE
             -- bullet
             if( data[1] == "bul" ) then
-                local bullet = create.bullet( data[3], data[4], data[5], data[2] )
+                local bullet = create.bullet( tonumber( data[3] ), tonumber( data[4] ), tonumber( data[5] ), tonumber( data[2] ) )
                 universe.bullets[bullet] = bullet
             end
 
