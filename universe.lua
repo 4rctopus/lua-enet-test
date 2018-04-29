@@ -7,11 +7,13 @@ local camera = require "camera"
 
 universe.players = {}
 universe.walls = {}
+universe.bullets = {}
 
 universe.collisionWorld = bump.newWorld()
 
 
 universe.camera = camera.create()
+
 
 function universe.load()
     create = require "create"
@@ -22,8 +24,12 @@ function universe.load()
 end
 
 function universe.update( dt )
-    for _, player in pairs( universe.players ) do
+    for i, player in pairs( universe.players ) do
+        player.id = i
         player:update( dt )
+    end
+    for i, bullet in pairs( universe.bullets ) do
+        bullet:update( dt )
     end
 end
 
@@ -32,6 +38,9 @@ function universe.draw()
 
     for _, player in pairs( universe.players ) do
         player:draw()
+    end
+    for _, bullet in pairs( universe.bullets ) do
+        bullet:draw()
     end
 
     for _, wall in pairs( universe.walls ) do
@@ -48,6 +57,12 @@ function universe.draw()
         love.graphics.rectangle( "line", x, y, w, h  )
     end
     --]]
+end
+
+function universe.mousepressed( x, y )
+    for _, player in pairs( universe.players ) do
+        player:mousepressed( x, y )
+    end
 end
 
 return universe

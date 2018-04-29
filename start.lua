@@ -16,7 +16,7 @@ function startState.draw()
 
     local hostName = ui.textBox( lume.merge( textcfg, { name = "hostName", text = "serverr",
         y = love.graphics.getHeight() / 3 - textcfg.font:getHeight() * 1.2 - 10, x = love.graphics.getWidth() * 0.03  } ) )
-    local hostText = ui.textBox( lume.merge( textcfg, { name = "hostText", text = "localhost:6789",
+    local hostText = ui.textBox( lume.merge( textcfg, { name = "hostText", text = "192.168.1.105:4000",
         y = love.graphics.getHeight() / 3, x = love.graphics.getWidth() * 0.03  } ) )
 
     
@@ -25,7 +25,7 @@ function startState.draw()
         
     local clientName = ui.textBox( lume.merge( textcfg, { name = "clientName", text = "client",
         y = love.graphics.getHeight() / 3 - textcfg.font:getHeight() * 1.2 - 10, x = love.graphics.getWidth() * 0.03 + love.graphics.getWidth() / 2 } ) )
-    local connectText = ui.textBox( lume.merge( textcfg, { name = "connectText", text = "localhost:6789",
+    local connectText = ui.textBox( lume.merge( textcfg, { name = "connectText", text = "89.136.89.108:4000",
         y = love.graphics.getHeight() / 3, x = love.graphics.getWidth() * 0.03 + love.graphics.getWidth() / 2  } ) )
 
     local connectButton = ui.button( { name = "connectButton", text = "connect", 

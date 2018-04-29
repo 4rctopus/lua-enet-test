@@ -7,7 +7,7 @@ local create = require "create"
 
 
 
-local host
+host = nil
 
 local peers = {}
 
@@ -41,6 +41,13 @@ function serverState.update( dt )
                 -- broadcast names:
                 -- ONCE
                 host:broadcast( players )
+            end
+
+            -- ONCE
+            -- bullet
+            if( data[1] == "bul" ) then
+                local bullet = create.bullet( data[3], data[4], data[5], data[2] )
+                universe.bullets[bullet] = bullet
             end
 
             -- SYNC
@@ -102,6 +109,10 @@ end
 
 function serverState.draw()
     universe.draw()
+end
+
+function serverState.mousepressed( x, y )
+    universe.mousepressed( x, y )
 end
 
 return serverState

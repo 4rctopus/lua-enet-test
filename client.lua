@@ -7,16 +7,19 @@ local create = require "create"
 
 local host
 local server
-local serverpeer
+
 local clientName 
 
-local clientId
+
 
 function clientState.load( ip, name )
     host = enet.host_create()
     server = host:connect( ip )
 
     universe.load()
+
+    clientId = nil
+    serverpeer = nil
     clientName = name
 end
 
@@ -87,6 +90,17 @@ function clientState.update( dt )
                 end
             end
 
+
+            -- ONCE
+            -- bullet
+            if( data[1] == "bul" )then
+                local id = tonumber( data[2] )
+                if( id ~= clientId ) then
+                    local bullet = create.bullet( data[3], data[4], data[5], id )
+                    universe.bullets[bullet] = bullet
+                end
+            end
+
             -- SYNC
             if( data[1] == "pos" ) then
                 local id = tonumber( data[2] )
@@ -101,11 +115,17 @@ function clientState.update( dt )
         elseif event.type == "connect" then
             print(event.peer, "connected.")
             serverpeer = event.peer
+            -- ONCE
             -- send name
             serverpeer:send( "name " .. clientName .. " " )
 
         elseif event.type == "disconnect" then
             print(event.peer, "disconnected.")
+            for i, player in pairs( universe.players ) do
+                player:clear()
+            end
+            universe.players = {}
+            state = require "start"
         end
         event = host:service()
     end
@@ -121,11 +141,15 @@ function clientState.update( dt )
 
     universe.update( dt )
 
-    if( time < 0 ) then time = 0.05 end
+    if( time < 0 ) then time = 0.07 end
 end
 
 function clientState.draw()
     universe.draw()
+end
+
+function clientState.mousepressed( x, y )
+    universe.mousepressed( x, y )
 end
 
 return clientState
