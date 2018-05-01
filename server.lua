@@ -16,6 +16,7 @@ function serverState.load( ip, name )
 
     universe.load()
     universe.players[1] = create.player( name, true )
+    clientId = 1
 end
 
 
@@ -48,6 +49,21 @@ function serverState.update( dt )
             if( data[1] == "bul" ) then
                 local bullet = create.bullet( tonumber( data[3] ), tonumber( data[4] ), tonumber( data[5] ), tonumber( data[2] ) )
                 universe.bullets[bullet] = bullet
+            end
+
+            -- ONCE
+            -- chat
+            if( data[1] == "chat" ) then
+                local id = peers[event.peer].playerid;
+                local name = universe.players[id].name;
+                local text = ""
+                local idx = 2
+                while data[idx] do
+                    text = text .. data[idx] .. " "
+                    idx = idx + 1
+                end
+                host:broadcast( "chat " .. name .. " " .. text .. " " );
+                chatTexts[#chatTexts + 1] = name .. ": " .. text;
             end
 
             -- SYNC
@@ -113,6 +129,10 @@ end
 
 function serverState.mousepressed( x, y )
     universe.mousepressed( x, y )
+end
+
+function serverState.keypressed( key )
+    universe.keypressed( key )
 end
 
 return serverState

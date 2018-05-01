@@ -2,7 +2,7 @@ local universe = {}
 
 local create 
 local bump = require "lib/bump"
-
+local fonts = require "font"
 local camera = require "camera"
 
 universe.players = {}
@@ -11,8 +11,12 @@ universe.bullets = {}
 
 universe.collisionWorld = bump.newWorld()
 
-
 universe.camera = camera.create()
+
+chatOpen = false
+local chatTextBox = false
+chatTexts = {}
+
 
 
 function universe.load()
@@ -49,7 +53,7 @@ function universe.draw()
         love.graphics.rectangle( "fill", x, y, w, h )
     end
 
-    ---[[
+    --[[
     local items, len = universe.collisionWorld:getItems()
     for i, item in pairs( items ) do
         local x, y, w, h = universe.collisionWorld:getRect( item )
@@ -57,11 +61,48 @@ function universe.draw()
         love.graphics.rectangle( "line", x, y, w, h  )
     end
     --]]
+
+    love.graphics.origin()
+
+    local cfont = fonts.cfont24
+
+    love.graphics.setFont( cfont )
+    local y = 100
+    for i = math.max( 1, #chatTexts - 10 ), #chatTexts do
+        love.graphics.print( chatTexts[i], 10, y )
+        y = y + cfont:getHeight() + 10
+    end
+
+    -- chat textbox
+    if( chatOpen ) then
+        local p = 20; -- push
+        local h = cfont:getHeight();
+        chatTextBox = ui.textBox( { name = "chat", font = cfont, x = p, y = love.graphics.getHeight() - h - p, w = love.graphics.getWidth() - 2 * p, noChangeText = true, autoFocus = true  } );
+    end
 end
 
 function universe.mousepressed( x, y )
     for _, player in pairs( universe.players ) do
         player:mousepressed( x, y )
+    end
+end
+
+function universe.keypressed( key )
+    if( key == "return" ) then
+        if( chatOpen ) then
+            chatOpen = false;
+            if( chatTextBox.text ~= "" ) then
+                if( serverpeer ) then
+                    serverpeer:send( "chat " ..  chatTextBox.text .. " " );
+                elseif( host ) then
+                    host:broadcast( "chat " .. universe.players[clientId].name .. " " .. chatTextBox.text .. " " );
+                    chatTexts[#chatTexts + 1] = universe.players[clientId].name .. ": " .. chatTextBox.text;
+                end
+            end
+            ui.clear()
+        else
+            chatOpen = true;
+        end
     end
 end
 

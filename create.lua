@@ -1,6 +1,7 @@
 local create = {}
 
 local universe = require "universe"
+local fonts = require "font"
 
 -- filters collisions so the players don't collider
 local function playerFilter( item, other )
@@ -44,7 +45,7 @@ create.player = function( name, home )
     end
 
     this.update = function( this, dt )
-        if( this.home ) then
+        if( this.home and not chatOpen ) then
             this:input( dt )
         end
 
@@ -110,6 +111,7 @@ create.player = function( name, home )
 
         -- display the name of this player
         love.graphics.setColor( 1, 1, 1 )
+        love.graphics.setFont( fonts.cfont24 );
         if( this.name ) then
             love.graphics.printf( this.name, this.x - w / 2 - 50, this.y - w / 2 - 50, w + 100, "center" )
         end
@@ -171,7 +173,7 @@ create.bullet = function( x, y, rot, id )
 
     this.x = x
     this.y = y
-    this.speed = 1000
+    this.speed = 2000
     -- vx, vy from the rotation
     this.vx = math.cos( rot ) * this.speed
     this.vy = math.sin( rot ) * this.speed

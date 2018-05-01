@@ -103,6 +103,18 @@ function clientState.update( dt )
                 end
             end
 
+            -- ONCE
+            -- chat
+            if( data[1] == "chat" ) then
+                local text = ""
+                local idx = 3
+                while data[idx] do
+                    text = text .. data[idx] .. " "
+                    idx = idx + 1
+                end
+                chatTexts[#chatTexts + 1] = data[2] .. ": " .. text;
+            end
+
             -- SYNC
             if( data[1] == "pos" ) then
                 local id = tonumber( data[2] )
@@ -154,6 +166,10 @@ end
 
 function clientState.mousepressed( x, y )
     universe.mousepressed( x, y )
+end
+
+function clientState.keypressed( key )
+    universe.keypressed( key )
 end
 
 return clientState

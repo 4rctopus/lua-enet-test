@@ -8,7 +8,7 @@ local function split(str, pos)
 end
 
 ui.textBoxSettings = {
-    name = "noname", x = 0, y = 0, w = 100, font = nil, text = "", noChangeText = false,
+    name = "noname", x = 0, y = 0, w = 100, font = nil, text = "", noChangeText = false, autoFocus = false,
     backgroundColor = { 44 / 255, 49 / 255, 58 / 255 },
     cursorColor = {  58 / 255, 139 / 255, 255 / 255 },
 }
@@ -24,7 +24,7 @@ function ui.textBox( settings )
         ui.elements[s.name] = {}
         ui.elements[s.name].text = ""
         ui.elements[s.name].textx = x
-        ui.elements[s.name].focused = false
+        ui.elements[s.name].focused = s.autoFocus
         ui.elements[s.name].cursorPos = 1
         if( s.text ~= nil ) then
             ui.elements[s.name].text = s.text
